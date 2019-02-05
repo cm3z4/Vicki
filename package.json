@@ -1,0 +1,27 @@
+{
+  "name": "lnn",
+  "version": "1.0.0",
+  "description": "Using Node.js to navigate the Linux system.",
+  "main": "lnn.js",
+  "dependencies": {
+    "colors": "^1.3.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cm3z4/LNN-Linux-Node-Nav-.git"
+  },
+  "keywords": [
+    "Linux",
+    "Node.js"
+  ],
+  "author": "cm3z4",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cm3z4/LNN-Linux-Node-Nav-/issues"
+  },
+  "homepage": "https://github.com/cm3z4/LNN-Linux-Node-Nav-#readme"
+}
