@@ -34,6 +34,12 @@ function buildTree(sp) {
                 } else {
                     console.log(i + ": " + colors.bold.blue(entries[i]));
                 };
+            } else if (fs.lstatSync(sp + "/" + entries[i]).isSymbolicLink()) {
+                if (i < 10) {
+                    console.log(" " + i + ": " + colors.grey(entries[i]));
+                } else {
+                    console.log(i + ": " + colors.grey(entries[i]));
+                };
             } else {
                 if (i < 10) {
                     console.log(" " + i + ": " + entries[i]);
@@ -53,15 +59,30 @@ function buildTree(sp) {
             // The "h" will always take you to the starting path (startPath);
             if (answer === "h") {
                 buildTree(startPath);
+            } else if (answer === "b") {
+                let backPath = [];
+                let stageBackPath = sp.split("/");
+                for (let i = 0; i < stageBackPath.length - 1; i++) {
+                    if (stageBackPath[i] !== '') {
+                        backPath.push("/" + stageBackPath[i]);
+                    };
+                };
+                buildTree(backPath.join(""));
             } else {
 
-                if (fs.lstatSync(sp + "/" + dirArr[answer]).isDirectory()) {
+                if (fs.lstatSync(sp + "/" + dirArr[answer]).isDirectory() || fs.lstatSync(sp + "/" + dirArr[answer]).isSymbolicLink()) {
                     buildTree(sp + "/" + dirArr[answer]);
                 } else {
                     const text = fs.readFileSync(sp + "/" + dirArr[answer], 'utf8').trim();
                     console.log("")
+                    console.log(colors.bold.yellow("Reading file: " + dirArr[answer]));
+                    console.log("")
                     console.log(colors.green(text));
-                    buildTree(sp);
+                    console.log("")
+                    nav.question('Press enter to continue: ', (key) => {
+                        buildTree(sp);
+                    });
+
                 };
 
             };
