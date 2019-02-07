@@ -4,6 +4,7 @@ var colors = require('colors');
 
 const fs = require('fs');
 const readline = require('readline');
+var rimraf = require("rimraf");
 
 const nav = readline.createInterface({
     input: process.stdin,
@@ -13,6 +14,7 @@ const nav = readline.createInterface({
 let startPath = "/home/cm3z4"
 let dirArr = [];
 let currentPath = "";
+let space = spaceFunc => { console.log("") };
 
 function buildTree(sp) {
     console.log("");
@@ -50,7 +52,6 @@ function buildTree(sp) {
         };
 
         console.log("");
-        //console.log(dirArr);
 
         nav.question('Enter a number: ', (answer) => {
 
@@ -59,6 +60,46 @@ function buildTree(sp) {
             // The "h" will always take you to the starting path (startPath);
             if (answer === "h") {
                 buildTree(startPath);
+            } else if (answer === "rm") {
+                space();
+                nav.question('Enter a number (file/directory to delete): ', (file) => {
+                    space();
+                    if (fs.lstatSync(sp + "/" + dirArr[file]).isDirectory()) {
+                        rimraf(sp + "/" + dirArr[file], (err) => {
+                            if (err) throw err;
+                        });
+                        console.log(colors.bold.yellow(dirArr[file] + ' was deleted'));
+                        space();
+                        nav.question('Press enter to continue: ', (enter) => {
+                            buildTree(sp);
+                        });
+                    } else {
+                        fs.unlink(sp + "/" + dirArr[file], (err) => {
+                            if (err) throw err;
+                            console.log(colors.bold.yellow(dirArr[file] + ' was deleted'));
+                            space();
+                            nav.question('Press enter to continue: ', (enter) => {
+                                buildTree(sp);
+                            });
+                        });
+                    };
+                });
+
+            } else if (answer === "w") {
+                space();
+                nav.question('File name: ', (name) => {
+                    space();
+                    nav.question('Content: ', (content) => {
+                        fs.writeFile(sp + "/" + name, content, 'utf8', cb => {
+                            space();
+                            console.log(colors.bold.yellow(name + " was create."));
+                            space();
+                            nav.question('Press enter to continue: ', (key) => {
+                                buildTree(sp);
+                            });
+                        });
+                    });
+                });
             } else if (answer === "b") {
                 let backPath = [];
                 let stageBackPath = sp.split("/");
