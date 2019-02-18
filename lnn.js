@@ -57,8 +57,12 @@ function buildTree(sp) {
 
             currentPath = currentPath + "/" + dirArr[answer];
 
-            // The "h" will always take you to the starting path (startPath);
-            if (answer === "h") {
+            if (answer === "exit") { // Exit the program.
+                space()
+                console.log(colors.green("Later!"));
+                space();
+                process.exit();
+            } else if (answer === "h") { // Navigate to starting path (startPath).
                 buildTree(startPath);
             } else if (answer === "rm") {
                 space();
