@@ -1,5 +1,9 @@
 // LNN (Linux Node Nav).
 
+// Import the configuration file.
+const config = require('./config.js');
+var clear = require('clear');
+
 var colors = require('colors');
 
 const fs = require('fs');
@@ -12,50 +16,74 @@ const nav = readline.createInterface({
 });
 
 let startPath = "/home/cm3z4"
-let dirArr = [];
+var itemsArr = [];
 let currentPath = "";
 let space = spaceFunc => { console.log("") };
 
 function buildTree(sp) {
-    console.log("");
+    config.showHistory === true ? null : clear();
+    space();
     console.log(colors.bold.yellow("Current: ") + sp);
-    dirArr = [];
+    itemsArr = [];
     currentPath = currentPath + sp;
-    fs.readdir(sp, (err, entries) => {
 
-        console.log("");
+    function listItems() {
+        space();
+        if (itemsArr.length === 0) {
+            console.log(colors.bold.yellow("This folder is empty!"));
+        } else {
+            for (let i = 0; i < itemsArr.length; i++) {
 
-        for (let i = 0; i < entries.length; i++) {
-
-            dirArr.push(entries[i]);
-
-
-            if (fs.lstatSync(sp + "/" + entries[i]).isDirectory()) {
-                if (i < 10) {
-                    console.log(" " + i + ": " + colors.bold.blue(entries[i]));
+                if (fs.lstatSync(sp + "/" + itemsArr[i]).isDirectory()) {
+                    if (i < 10) {
+                        console.log(" " + i + ": " + colors.bold.blue(itemsArr[i]));
+                    } else {
+                        console.log(i + ": " + colors.bold.blue(itemsArr[i]));
+                    };
+                } else if (fs.lstatSync(sp + "/" + itemsArr[i]).isSymbolicLink()) {
+                    if (i < 10) {
+                        console.log(" " + i + ": " + colors.grey(itemsArr[i]));
+                    } else {
+                        console.log(i + ": " + colors.grey(itemsArr[i]));
+                    };
                 } else {
-                    console.log(i + ": " + colors.bold.blue(entries[i]));
-                };
-            } else if (fs.lstatSync(sp + "/" + entries[i]).isSymbolicLink()) {
-                if (i < 10) {
-                    console.log(" " + i + ": " + colors.grey(entries[i]));
-                } else {
-                    console.log(i + ": " + colors.grey(entries[i]));
-                };
-            } else {
-                if (i < 10) {
-                    console.log(" " + i + ": " + entries[i]);
-                } else {
-                    console.log(i + ": " + entries[i]);
+                    if (i < 10) {
+                        console.log(" " + i + ": " + itemsArr[i]);
+                    } else {
+                        console.log(i + ": " + itemsArr[i]);
+                    };
                 };
             };
         };
+    };
 
-        console.log("");
+    if (config.showHidden === true) {
+        // Fill itemsArr without hidden files/directories.
+        fs.readdir(sp, (err, entries) => {
+            entries.forEach(function (e) {
+                itemsArr.push(e);
+            });
+            listItems();
+            main();
+        });
+    } else {
+        // Fill itemsArr with all files/directories.
+        fs.readdir(sp, (err, entries) => {
+            entries.forEach(function (e) {
+                if (! /^\..*/.test(e)) {
+                    itemsArr.push(e);
+                };
+            });
+            listItems();
+            main();
+        });
+    };
 
+    function main() {
+        space();
         nav.question('Enter a number: ', (answer) => {
 
-            currentPath = currentPath + "/" + dirArr[answer];
+            currentPath = currentPath + "/" + itemsArr[answer];
 
             if (answer === "exit") { // Exit the program.
                 space()
@@ -68,19 +96,19 @@ function buildTree(sp) {
                 space();
                 nav.question('Enter a number (file/directory to delete): ', (file) => {
                     space();
-                    if (fs.lstatSync(sp + "/" + dirArr[file]).isDirectory()) {
-                        rimraf(sp + "/" + dirArr[file], (err) => {
+                    if (fs.lstatSync(sp + "/" + itemsArr[file]).isDirectory()) {
+                        rimraf(sp + "/" + itemsArr[file], (err) => {
                             if (err) throw err;
                         });
-                        console.log(colors.bold.yellow(dirArr[file] + ' was deleted'));
+                        console.log(colors.bold.yellow(itemsArr[file] + ' was deleted'));
                         space();
                         nav.question('Press enter to continue: ', (enter) => {
                             buildTree(sp);
                         });
                     } else {
-                        fs.unlink(sp + "/" + dirArr[file], (err) => {
+                        fs.unlink(sp + "/" + itemsArr[file], (err) => {
                             if (err) throw err;
-                            console.log(colors.bold.yellow(dirArr[file] + ' was deleted'));
+                            console.log(colors.bold.yellow(itemsArr[file] + ' was deleted'));
                             space();
                             nav.question('Press enter to continue: ', (enter) => {
                                 buildTree(sp);
@@ -104,7 +132,7 @@ function buildTree(sp) {
                         });
                     });
                 });
-            } else if (answer === "b") {
+            } else if (answer === "..") {
                 let backPath = [];
                 let stageBackPath = sp.split("/");
                 for (let i = 0; i < stageBackPath.length - 1; i++) {
@@ -115,12 +143,12 @@ function buildTree(sp) {
                 buildTree(backPath.join(""));
             } else {
 
-                if (fs.lstatSync(sp + "/" + dirArr[answer]).isDirectory() || fs.lstatSync(sp + "/" + dirArr[answer]).isSymbolicLink()) {
-                    buildTree(sp + "/" + dirArr[answer]);
+                if (fs.lstatSync(sp + "/" + itemsArr[answer]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
+                    buildTree(sp + "/" + itemsArr[answer]);
                 } else {
-                    const text = fs.readFileSync(sp + "/" + dirArr[answer], 'utf8').trim();
+                    const text = fs.readFileSync(sp + "/" + itemsArr[answer], 'utf8').trim();
                     console.log("")
-                    console.log(colors.bold.yellow("Reading file: " + dirArr[answer]));
+                    console.log(colors.bold.yellow("Reading file: " + itemsArr[answer]));
                     console.log("")
                     console.log(colors.green(text));
                     console.log("")
@@ -133,8 +161,7 @@ function buildTree(sp) {
             };
 
         });
-
-    });
+    };
 
 };
 
