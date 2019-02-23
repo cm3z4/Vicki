@@ -1,8 +1,8 @@
 {
-  "name": "lnn",
+  "name": "vicky",
   "version": "1.0.0",
   "description": "Using Node.js to navigate the Linux system.",
-  "main": "lnn.js",
+  "main": "vicky.js",
   "dependencies": {
     "clear": "^0.1.0",
     "colors": "^1.3.3",

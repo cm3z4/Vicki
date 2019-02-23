@@ -1,31 +1,45 @@
-// LNN (Linux Node Nav).
+//                                         
+//   _____ _     _             ___     ___ 
+//  |  |  |_|___| |_ _ _      |_  |   |   |
+//  |  |  | |  _| '_| | |      _| |_ _| | |
+//   \___/|_|___|_,_|_  |_____|_____|_|___|
+//                  |___|_____|
+//
+// Author: Christopher Meza (cm3z4).
+// Version: 1.0
+// ----------------------------------------
 
 // Import the configuration file.
 const config = require('./config.js');
-var clear = require('clear');
-
-var colors = require('colors');
-
+// Import Node.js modules.
 const fs = require('fs');
 const readline = require('readline');
-var rimraf = require("rimraf");
+// Import third-party modules.
+const clear = require('clear');
+const colors = require('colors');
+const rimraf = require('rimraf');
 
-const nav = readline.createInterface({
+// Creates a console prompt for user interaction.
+const prompt = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-let startPath = "/home/cm3z4"
-var itemsArr = [];
+// Staring path. Set this path in the config.js file.
+let startPath = config.startingPath;
+// Keeps track of the current path.
 let currentPath = "";
+// Holds the current path's directory items.
+let itemsArr = [];
+// No explaination neccassary...
 let space = spaceFunc => { console.log("") };
 
-function buildTree(sp) {
+function main(sp) {
     config.showHistory === true ? null : clear();
+    currentPath = currentPath + sp;
+    itemsArr = [];
     space();
     console.log(colors.bold.yellow("Current: ") + sp);
-    itemsArr = [];
-    currentPath = currentPath + sp;
 
     function listItems() {
         space();
@@ -64,7 +78,7 @@ function buildTree(sp) {
                 itemsArr.push(e);
             });
             listItems();
-            main();
+            navigation();
         });
     } else {
         // Fill itemsArr with all files/directories.
@@ -75,13 +89,13 @@ function buildTree(sp) {
                 };
             });
             listItems();
-            main();
+            navigation();
         });
     };
 
-    function main() {
+    function navigation() {
         space();
-        nav.question('Enter a number: ', (answer) => {
+        prompt.question('Enter a number: ', (answer) => {
 
             currentPath = currentPath + "/" + itemsArr[answer];
 
@@ -91,10 +105,10 @@ function buildTree(sp) {
                 space();
                 process.exit();
             } else if (answer === "h") { // Navigate to starting path (startPath).
-                buildTree(startPath);
+                main(startPath);
             } else if (answer === "rm") {
                 space();
-                nav.question('Enter a number (file/directory to delete): ', (file) => {
+                prompt.question('Enter a number (file/directory to delete): ', (file) => {
                     space();
                     if (fs.lstatSync(sp + "/" + itemsArr[file]).isDirectory()) {
                         rimraf(sp + "/" + itemsArr[file], (err) => {
@@ -102,16 +116,16 @@ function buildTree(sp) {
                         });
                         console.log(colors.bold.yellow(itemsArr[file] + ' was deleted'));
                         space();
-                        nav.question('Press enter to continue: ', (enter) => {
-                            buildTree(sp);
+                        prompt.question('Press enter to continue: ', (enter) => {
+                            main(sp);
                         });
                     } else {
                         fs.unlink(sp + "/" + itemsArr[file], (err) => {
                             if (err) throw err;
                             console.log(colors.bold.yellow(itemsArr[file] + ' was deleted'));
                             space();
-                            nav.question('Press enter to continue: ', (enter) => {
-                                buildTree(sp);
+                            prompt.question('Press enter to continue: ', (enter) => {
+                                main(sp);
                             });
                         });
                     };
@@ -119,15 +133,15 @@ function buildTree(sp) {
 
             } else if (answer === "w") {
                 space();
-                nav.question('File name: ', (name) => {
+                prompt.question('File name: ', (name) => {
                     space();
-                    nav.question('Content: ', (content) => {
+                    prompt.question('Content: ', (content) => {
                         fs.writeFile(sp + "/" + name, content, 'utf8', cb => {
                             space();
                             console.log(colors.bold.yellow(name + " was create."));
                             space();
-                            nav.question('Press enter to continue: ', (key) => {
-                                buildTree(sp);
+                            prompt.question('Press enter to continue: ', (key) => {
+                                main(sp);
                             });
                         });
                     });
@@ -140,11 +154,11 @@ function buildTree(sp) {
                         backPath.push("/" + stageBackPath[i]);
                     };
                 };
-                buildTree(backPath.join(""));
+                main(backPath.join(""));
             } else {
 
                 if (fs.lstatSync(sp + "/" + itemsArr[answer]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
-                    buildTree(sp + "/" + itemsArr[answer]);
+                    main(sp + "/" + itemsArr[answer]);
                 } else {
                     const text = fs.readFileSync(sp + "/" + itemsArr[answer], 'utf8').trim();
                     console.log("")
@@ -152,8 +166,8 @@ function buildTree(sp) {
                     console.log("")
                     console.log(colors.green(text));
                     console.log("")
-                    nav.question('Press enter to continue: ', (key) => {
-                        buildTree(sp);
+                    prompt.question('Press enter to continue: ', (key) => {
+                        main(sp);
                     });
 
                 };
@@ -165,4 +179,4 @@ function buildTree(sp) {
 
 };
 
-buildTree(startPath);
+main(startPath);
