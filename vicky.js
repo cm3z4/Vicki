@@ -37,14 +37,16 @@ let space = spaceFunc => { console.log("") };
 function main(sp) {
     config.showHistory === true ? null : clear();
     currentPath = currentPath + sp;
+    // Clear array on restarting the main function.
     itemsArr = [];
     space();
     console.log(colors.bold.yellow("Current: ") + sp);
 
+    // Print to screen all items in the current directory accordingly.
     function listItems() {
         space();
         if (itemsArr.length === 0) {
-            console.log(colors.bold.yellow("This folder is empty!"));
+            console.log(colors.bold.yellow("This directory is empty!"));
         } else {
             for (let i = 0; i < itemsArr.length; i++) {
 
@@ -95,50 +97,63 @@ function main(sp) {
 
     function navigation() {
         space();
-        prompt.question('Enter a number: ', (answer) => {
+        prompt.question('Enter a number or command: ', (answer) => {
 
             currentPath = currentPath + "/" + itemsArr[answer];
 
-            if (answer === "exit") { // Exit the program.
+            if (answer.trim() === "exit") { // Exit the program.
                 space()
-                console.log(colors.green("Later!"));
+                console.log(colors.green("Goodbye!"));
                 space();
                 process.exit();
-            } else if (answer === "h") { // Navigate to starting path (startPath).
+            } else if (answer.trim() === "h") { // Navigate to starting path (startPath).
                 main(startPath);
-            } else if (answer === "rm") {
+            } else if (answer.trim() === "rm") {
                 space();
-                prompt.question('Enter a number (file/directory to delete): ', (file) => {
+                prompt.question('Enter the file/directory to delete: ', (file) => {
                     space();
-                    if (fs.lstatSync(sp + "/" + itemsArr[file]).isDirectory()) {
-                        rimraf(sp + "/" + itemsArr[file], (err) => {
-                            if (err) throw err;
-                        });
-                        console.log(colors.bold.yellow(itemsArr[file] + ' was deleted'));
-                        space();
-                        prompt.question('Press enter to continue: ', (enter) => {
-                            main(sp);
-                        });
-                    } else {
-                        fs.unlink(sp + "/" + itemsArr[file], (err) => {
-                            if (err) throw err;
-                            console.log(colors.bold.yellow(itemsArr[file] + ' was deleted'));
+                    // Confirmation prompt to delete a file/directory.
+                    prompt.question(colors.bold.red('Are you sure you want to delete the selected file/directory? y/n: '), (confirm) => {
+                        if (confirm.trim() === "y" || confirm.trim() === "Y" || confirm.trim() === "yes" || confirm.trim() === "Yes") {
+                            if (fs.lstatSync(sp + "/" + itemsArr[file.trim()]).isDirectory()) {
+                                rimraf(sp + "/" + itemsArr[file.trim()], (err) => {
+                                    if (err) throw err;
+                                });
+                                console.log(colors.bold.yellow(itemsArr[file.trim()] + ' was deleted!'));
+                                space();
+                                prompt.question('Press enter to continue: ', (enter) => {
+                                    main(sp);
+                                });
+                            } else {
+                                fs.unlink(sp + "/" + itemsArr[file.trim()], (err) => {
+                                    if (err) throw err;
+                                    space();
+                                    console.log(colors.bold.yellow(itemsArr[file.trim()] + ' was deleted!'));
+                                    space();
+                                    prompt.question('Press enter to continue: ', (enter) => {
+                                        main(sp);
+                                    });
+                                });
+                            };
+                        } else if (confirm.trim() === "n" || confirm.trim() === "N" || confirm.trim() === "no" || confirm.trim() === "No") {
+                            space();
+                            console.log(colors.bold.yellow("Deletion aborted!"));
                             space();
                             prompt.question('Press enter to continue: ', (enter) => {
                                 main(sp);
                             });
-                        });
-                    };
+                        };
+                    });
                 });
 
-            } else if (answer === "w") {
+            } else if (answer.trim() === "w") {
                 space();
                 prompt.question('File name: ', (name) => {
                     space();
                     prompt.question('Content: ', (content) => {
-                        fs.writeFile(sp + "/" + name, content, 'utf8', cb => {
+                        fs.writeFile(sp + "/" + name.trim(), content.trim(), 'utf8', cb => {
                             space();
-                            console.log(colors.bold.yellow(name + " was create."));
+                            console.log(colors.bold.yellow(name.trim() + " was created!"));
                             space();
                             prompt.question('Press enter to continue: ', (key) => {
                                 main(sp);
@@ -146,7 +161,7 @@ function main(sp) {
                         });
                     });
                 });
-            } else if (answer === "..") {
+            } else if (answer.trim() === "..") {
                 let backPath = [];
                 let stageBackPath = sp.split("/");
                 for (let i = 0; i < stageBackPath.length - 1; i++) {
@@ -157,23 +172,20 @@ function main(sp) {
                 main(backPath.join(""));
             } else {
 
-                if (fs.lstatSync(sp + "/" + itemsArr[answer]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
-                    main(sp + "/" + itemsArr[answer]);
+                if (fs.lstatSync(sp + "/" + itemsArr[answer.trim()]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
+                    main(sp + "/" + itemsArr[answer.trim()]);
                 } else {
-                    const text = fs.readFileSync(sp + "/" + itemsArr[answer], 'utf8').trim();
-                    console.log("")
-                    console.log(colors.bold.yellow("Reading file: " + itemsArr[answer]));
-                    console.log("")
+                    const text = fs.readFileSync(sp + "/" + itemsArr[answer.trim()], 'utf8').trim();
+                    space();
+                    console.log(colors.bold.yellow("Reading file: " + itemsArr[answer.trim()]));
+                    space();
                     console.log(colors.green(text));
-                    console.log("")
+                    space();
                     prompt.question('Press enter to continue: ', (key) => {
                         main(sp);
                     });
-
                 };
-
             };
-
         });
     };
 
