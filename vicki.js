@@ -101,14 +101,23 @@ function main(sp) {
 
             currentPath = currentPath + "/" + itemsArr[answer];
 
-            if (answer.trim() === "exit") { // Exit the program.
+
+            if (answer.trim() === "help") {
+                const help = fs.readFileSync("help.txt", 'utf8');
+                clear();
+                console.log(colors.green(help));
+                prompt.question('Press enter to continue: ', (key) => {
+                    main(sp);
+                });
+
+            } else if (answer.trim() === "exit") { // Exit the program.
                 space()
                 console.log(colors.green("Goodbye!"));
                 space();
                 process.exit();
-            } else if (answer.trim() === "h") { // Navigate to starting path (startPath).
+            } else if (answer.trim() === "home") { // Navigate to starting path (startPath).
                 main(startPath);
-            } else if (answer.trim() === "rm") {
+            } else if (answer.trim() === "remove") {
                 space();
                 prompt.question('Enter the file/directory to delete: ', (file) => {
                     space();
@@ -146,7 +155,7 @@ function main(sp) {
                     });
                 });
 
-            } else if (answer.trim() === "w") {
+            } else if (answer.trim() === "new") {
                 space();
                 prompt.question('File name: ', (name) => {
                     space();

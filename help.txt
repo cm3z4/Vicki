@@ -1,0 +1,15 @@
+
+██╗   ██╗██╗ ██████╗██╗  ██╗██╗
+██║   ██║██║██╔════╝██║ ██╔╝██║
+██║   ██║██║██║     █████╔╝ ██║
+╚██╗ ██╔╝██║██║     ██╔═██╗ ██║
+ ╚████╔╝ ██║╚██████╗██║  ██╗██║ v_1.0
+  ╚═══╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝
+
+COMMANDS
+
+  exit - Exits the program (Vicki).
+  help - Displays this text file for reference.
+  home - Navigates the console back to the starting path.
+   new - Creates a new file/folder.
+remove - Removes a file/folder.
