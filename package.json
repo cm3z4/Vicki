@@ -1,8 +1,8 @@
 {
-  "name": "vicky",
+  "name": "vicki",
   "version": "1.0.0",
-  "description": "Using Node.js to navigate the Linux system.",
-  "main": "vicky.js",
+  "description": "Using Node.js to navigate a Unix-like/Linux system.",
+  "main": "vicki.js",
   "dependencies": {
     "clear": "^0.1.0",
     "colors": "^1.3.3",
