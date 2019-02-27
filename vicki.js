@@ -103,7 +103,7 @@ function main(sp) {
 
 
             if (answer.trim() === "help") {
-                const help = fs.readFileSync("help.txt", 'utf8');
+                const help = fs.readFileSync(__dirname + '/help.txt', 'utf8');
                 clear();
                 console.log(colors.green(help));
                 prompt.question('Press enter to continue: ', (key) => {
@@ -179,7 +179,7 @@ function main(sp) {
                     };
                 };
                 main(backPath.join(""));
-            } else {
+            } else if (answer.trim() < itemsArr.length) {
 
                 if (fs.lstatSync(sp + "/" + itemsArr[answer.trim()]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
                     main(sp + "/" + itemsArr[answer.trim()]);
@@ -194,10 +194,16 @@ function main(sp) {
                         main(sp);
                     });
                 };
+            } else {
+                space();
+                console.log(colors.bold.red("Not a valid number or command! Try again."));
+                space();
+                setTimeout(function () {
+                    main(sp);
+                }, 1500);
             };
         });
     };
-
 };
 
 main(startPath);
