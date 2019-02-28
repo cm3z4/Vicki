@@ -8,6 +8,7 @@
 
 COMMANDS
 
+  back - Navigates to the previous directory.
   exit - Exits the program (Vicki).
   help - Displays this text file for reference.
   home - Navigates the console back to the starting path.

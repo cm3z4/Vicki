@@ -101,6 +101,16 @@ function main(sp) {
 
             currentPath = currentPath + "/" + itemsArr[answer];
 
+            // No entry response.
+            if (answer === "") {
+                space();
+                console.log(colors.bold.red("Nothing was entered! Try again."));
+                space();
+                setTimeout(function () {
+                    main(sp);
+                }, 1500);
+                return;
+            };
 
             if (answer.trim() === "help") {
                 const help = fs.readFileSync(__dirname + '/help.txt', 'utf8');
@@ -170,7 +180,8 @@ function main(sp) {
                         });
                     });
                 });
-            } else if (answer.trim() === "..") {
+
+            } else if (answer.trim() === "back" || answer.trim() === "..") {
                 let backPath = [];
                 let stageBackPath = sp.split("/");
                 for (let i = 0; i < stageBackPath.length - 1; i++) {
@@ -179,6 +190,7 @@ function main(sp) {
                     };
                 };
                 main(backPath.join(""));
+
             } else if (answer.trim() < itemsArr.length) {
 
                 if (fs.lstatSync(sp + "/" + itemsArr[answer.trim()]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
@@ -194,6 +206,7 @@ function main(sp) {
                         main(sp);
                     });
                 };
+                
             } else {
                 space();
                 console.log(colors.bold.red("Not a valid number or command! Try again."));
