@@ -127,18 +127,18 @@ function main(sp) {
                 process.exit();
             } else if (answer.trim() === "home") { // Navigate to starting path (startPath).
                 main(startPath);
-            } else if (answer.trim() === "remove") {
+            } else if (answer.trim() === "remove" || answer.trim() === "delete") {
                 space();
-                prompt.question('Enter the file/directory to delete: ', (file) => {
+                prompt.question('Enter the file/folder number to delete: ', (file) => {
                     space();
-                    // Confirmation prompt to delete a file/directory.
-                    prompt.question(colors.bold.red('Are you sure you want to delete the selected file/directory? y/n: '), (confirm) => {
+                    // Confirmation prompt to delete a file/folder.
+                    prompt.question(colors.bold.red(`Are you sure you want to delete ${colors.bold.bgRed.black(itemsArr[file])}? y/n: `), (confirm) => {
                         if (confirm.trim() === "y" || confirm.trim() === "Y" || confirm.trim() === "yes" || confirm.trim() === "Yes") {
                             if (fs.lstatSync(sp + "/" + itemsArr[file.trim()]).isDirectory()) {
                                 rimraf(sp + "/" + itemsArr[file.trim()], (err) => {
                                     if (err) throw err;
                                 });
-                                console.log(colors.bold.yellow(itemsArr[file.trim()] + ' was deleted!'));
+                                console.log(colors.bold.yellow(`${colors.bold.bgYellow.black(itemsArr[file.trim()])} was deleted!`));
                                 space();
                                 prompt.question('Press enter to continue: ', (enter) => {
                                     main(sp);
@@ -147,7 +147,7 @@ function main(sp) {
                                 fs.unlink(sp + "/" + itemsArr[file.trim()], (err) => {
                                     if (err) throw err;
                                     space();
-                                    console.log(colors.bold.yellow(itemsArr[file.trim()] + ' was deleted!'));
+                                    console.log(colors.bold.yellow(`${colors.bold.bgYellow.black(itemsArr[file.trim()])} was deleted!`));
                                     space();
                                     prompt.question('Press enter to continue: ', (enter) => {
                                         main(sp);
@@ -206,7 +206,7 @@ function main(sp) {
                         main(sp);
                     });
                 };
-                
+
             } else {
                 space();
                 console.log(colors.bold.red("Not a valid number or command! Try again."));
