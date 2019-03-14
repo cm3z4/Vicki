@@ -19,10 +19,10 @@
 - Extracting files/directories.
 - History logging.
 
-### Screenshot
-
-![](./assets/img/screenshot.png)
+### Screenshots
 
 ![](./assets/img/screenshot1.png)
+
+![](./assets/img/screenshot.png)
 
 ![](./assets/img/screenshot2.png)
