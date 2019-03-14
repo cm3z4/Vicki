@@ -1,6 +1,10 @@
 # Vicki
 
-### Vicki is a Node.js application build to easily navigate a Unix-like/Linux system with a command-line (CLI) interface. This allows a complete beginner to use a terminal to read/create/remove files and directories without learning any basic commands. Navigating is as simple as pressing a number to change directories.
+### Description
+
+Vicki is a Node.js application built to easily navigate a Unix-like/Linux system with a command-line interface (CLI). This allows a complete beginner to use a terminal to read/write and remove files/directories without learning any basic shell commands. Navigating is as simple as pressing a number to change directories.
+
+*My wife says I never do anything for her, so I named this program after her...*
 
 ### Features
 - Directory indexing for easy navigation.
