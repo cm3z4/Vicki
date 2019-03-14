@@ -18,6 +18,7 @@ const readline = require('readline');
 const clear = require('clear');
 const colors = require('colors');
 const rimraf = require('rimraf');
+const terminalImage = require('terminal-image');
 
 // Creates a console prompt for user interaction.
 const prompt = readline.createInterface({
@@ -195,6 +196,19 @@ function main(sp) {
 
                 if (fs.lstatSync(sp + "/" + itemsArr[answer.trim()]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
                     main(sp + "/" + itemsArr[answer.trim()]);
+
+                } else if (itemsArr[answer.trim()].includes('.png') || itemsArr[answer.trim()].includes('.PNG') || itemsArr[answer.trim()].includes('.jpg') || itemsArr[answer.trim()].includes('.JPG') || itemsArr[answer.trim()].includes('.jpeg') || itemsArr[answer.trim()].includes('.JPEG')) {
+
+                    (async () => {
+                        console.log(await terminalImage.file(sp + "/" + itemsArr[answer.trim()]));
+                    })();
+                    space();
+                    setTimeout(function () {
+                        prompt.question('Press enter to continue: ', (key) => {
+                            main(sp);
+                        });
+                    }, 3000);
+
                 } else {
                     const text = fs.readFileSync(sp + "/" + itemsArr[answer.trim()], 'utf8').trim();
                     space();
