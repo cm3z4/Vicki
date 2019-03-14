@@ -5,6 +5,7 @@
 ### Features
 - Directory indexing for easy navigation.
 - Read UTF-8 files.
+- View images (png & jpg) in the terminal.
 - Create text files.
 - Delete files and directories.
 - Setting a custom starting (home) path.
@@ -13,7 +14,6 @@
 
 ### Developing Features
 - Playing audio/video files.
-- Viewing images in the console.
 - Copying files/directories.
 - Compressing files/directories.
 - Extracting files/directories.
@@ -24,3 +24,5 @@
 ![](./assets/img/screenshot.png)
 
 ![](./assets/img/screenshot1.png)
+
+![](./assets/img/screenshot2.png)
