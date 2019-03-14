@@ -30,3 +30,5 @@ Vicki is a Node.js application built to easily navigate a Unix-like/Linux system
 ![](./assets/img/screenshot.png)
 
 ![](./assets/img/screenshot2.png)
+
+![](./assets/img/vicki.gif)
