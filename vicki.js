@@ -41,13 +41,13 @@ function main(sp) {
     // Clear array on restarting the main function.
     itemsArr = [];
     space();
-    console.log(colors.bold.yellow("Current: ") + sp);
+    console.log(colors.bold.inverse("Current: " + sp + "/"));
 
     // Print to screen all items in the current directory accordingly.
     function listItems() {
         space();
         if (itemsArr.length === 0) {
-            console.log(colors.bold.yellow("This directory is empty!"));
+            console.log(colors.bold.inverse("This directory is empty!"));
         } else {
             for (let i = 0; i < itemsArr.length; i++) {
 
@@ -105,7 +105,7 @@ function main(sp) {
             // No entry response.
             if (answer === "") {
                 space();
-                console.log(colors.bold.red("Nothing was entered! Try again."));
+                console.log(colors.bold.inverse("Nothing was entered! Try again."));
                 space();
                 setTimeout(function () {
                     main(sp);
@@ -116,14 +116,14 @@ function main(sp) {
             if (answer.trim() === "help") {
                 const help = fs.readFileSync(__dirname + '/help.txt', 'utf8');
                 clear();
-                console.log(colors.green(help));
+                console.log(colors.blue(help));
                 prompt.question('Press enter to continue: ', (key) => {
                     main(sp);
                 });
 
             } else if (answer.trim() === "exit") { // Exit the program.
                 space()
-                console.log(colors.green("Goodbye!"));
+                console.log(colors.bold.inverse("Goodbye!"));
                 space();
                 process.exit();
             } else if (answer.trim() === "home") { // Navigate to starting path (startPath).
@@ -133,13 +133,13 @@ function main(sp) {
                 prompt.question('Enter the file/folder number to delete: ', (file) => {
                     space();
                     // Confirmation prompt to delete a file/folder.
-                    prompt.question(colors.bold.red(`Are you sure you want to delete ${colors.bold.bgRed.black(itemsArr[file])}? y/n: `), (confirm) => {
+                    prompt.question(colors.bold.inverse(`Are you sure you want to delete ${itemsArr[file]}? y/n:`) + " ", (confirm) => {
                         if (confirm.trim() === "y" || confirm.trim() === "Y" || confirm.trim() === "yes" || confirm.trim() === "Yes") {
                             if (fs.lstatSync(sp + "/" + itemsArr[file.trim()]).isDirectory()) {
                                 rimraf(sp + "/" + itemsArr[file.trim()], (err) => {
                                     if (err) throw err;
                                 });
-                                console.log(colors.bold.yellow(`${colors.bold.bgYellow.black(itemsArr[file.trim()])} was deleted!`));
+                                console.log(colors.bold.inverse(`${itemsArr[file.trim()]} was deleted!`));
                                 space();
                                 prompt.question('Press enter to continue: ', (enter) => {
                                     main(sp);
@@ -148,7 +148,7 @@ function main(sp) {
                                 fs.unlink(sp + "/" + itemsArr[file.trim()], (err) => {
                                     if (err) throw err;
                                     space();
-                                    console.log(colors.bold.yellow(`${colors.bold.bgYellow.black(itemsArr[file.trim()])} was deleted!`));
+                                    console.log(colors.bold.inverse(`${itemsArr[file.trim()]} was deleted!`));
                                     space();
                                     prompt.question('Press enter to continue: ', (enter) => {
                                         main(sp);
@@ -157,11 +157,18 @@ function main(sp) {
                             };
                         } else if (confirm.trim() === "n" || confirm.trim() === "N" || confirm.trim() === "no" || confirm.trim() === "No") {
                             space();
-                            console.log(colors.bold.yellow("Deletion aborted!"));
+                            console.log(colors.bold.inverse("Deletion aborted!"));
                             space();
                             prompt.question('Press enter to continue: ', (enter) => {
                                 main(sp);
                             });
+                        } else {
+                            space();
+                            console.log(colors.bold.inverse("Not a valid option!"));
+                            space();
+                            setTimeout(function () {
+                                main(sp);
+                            }, 1500);
                         };
                     });
                 });
@@ -173,7 +180,7 @@ function main(sp) {
                     prompt.question('Content: ', (content) => {
                         fs.writeFile(sp + "/" + name.trim(), content.trim(), 'utf8', cb => {
                             space();
-                            console.log(colors.bold.yellow(name.trim() + " was created!"));
+                            console.log(colors.bold.inverse(name.trim() + " was created!"));
                             space();
                             prompt.question('Press enter to continue: ', (key) => {
                                 main(sp);
@@ -213,9 +220,9 @@ function main(sp) {
                 } else {
                     const text = fs.readFileSync(sp + "/" + itemsArr[answer.trim()], 'utf8').trim();
                     space();
-                    console.log(colors.bold.yellow("Reading file: " + itemsArr[answer.trim()]));
+                    console.log(colors.bold.inverse("Reading file: " + itemsArr[answer.trim()]));
                     space();
-                    console.log(colors.green(text));
+                    console.log(colors.inverse(text));
                     space();
                     prompt.question('Press enter to continue: ', (key) => {
                         main(sp);
@@ -224,7 +231,7 @@ function main(sp) {
 
             } else {
                 space();
-                console.log(colors.bold.red("Not a valid number or command! Try again."));
+                console.log(colors.bold.inverse("Not a valid number or command! Try again."));
                 space();
                 setTimeout(function () {
                     main(sp);
