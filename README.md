@@ -40,4 +40,4 @@ I created a bash/zsh alias to globally execute vicki.js from anywhere on my syst
 
 ![](./assets/img/screenshot2.png)
 
-![](./assets/img/vicki.gif)
+![](./assets/img/create_delete.gif)
