@@ -37,11 +37,21 @@ let space = spaceFunc => { console.log("") };
 
 function main(sp) {
     config.showHistory === true ? null : clear();
-    currentPath = currentPath + sp;
+    if (sp === "/") {
+        currentPath = sp;
+    } else {
+        currentPath = currentPath + sp;
+    };
+
     // Clear array on restarting the main function.
     itemsArr = [];
     space();
-    console.log(colors.bold.inverse("Current: " + sp + "/"));
+    if (sp === "/") {
+        console.log(colors.bold.inverse("Current: " + sp));
+    } else {
+        console.log(colors.bold.inverse("Current: " + sp + "/"));
+    };
+
 
     // Print to screen all items in the current directory accordingly.
     function listItems() {
@@ -87,7 +97,7 @@ function main(sp) {
         // Fill itemsArr with all files/directories.
         fs.readdir(sp, (err, entries) => {
             entries.forEach(function (e) {
-                if (! /^\..*/.test(e)) {
+                if (!/^\..*/.test(e)) {
                     itemsArr.push(e);
                 };
             });
@@ -191,18 +201,24 @@ function main(sp) {
 
             } else if (answer.trim() === "back" || answer.trim() === "..") {
                 let backPath = [];
+                console.log(sp);
                 let stageBackPath = sp.split("/");
+                console.log(stageBackPath);
+                console.log(stageBackPath.length);
                 for (let i = 0; i < stageBackPath.length - 1; i++) {
-                    if (stageBackPath[i] !== '') {
-                        backPath.push("/" + stageBackPath[i]);
-                    };
+                    backPath.push("/" + stageBackPath[i]);
                 };
+                
                 main(backPath.join(""));
 
             } else if (answer.trim() < itemsArr.length) {
 
                 if (fs.lstatSync(sp + "/" + itemsArr[answer.trim()]).isDirectory() || fs.lstatSync(sp + "/" + itemsArr[answer]).isSymbolicLink()) {
-                    main(sp + "/" + itemsArr[answer.trim()]);
+                    if (sp === "/") {
+                        main(sp + itemsArr[answer.trim()]);
+                    } else {
+                        main(sp + "/" + itemsArr[answer.trim()]);
+                    };
 
                 } else if (itemsArr[answer.trim()].match(/png|jpg|jpeg/i)) {
 
