@@ -28,20 +28,14 @@ const prompt = readline.createInterface({
 
 // Staring path. Set this path in the config.js file.
 let startPath = config.startingPath;
-// Keeps track of the current path.
-let currentPath = "";
 // Holds the current path's directory items.
 let itemsArr = [];
 // No explaination neccassary...
 let space = spaceFunc => { console.log("") };
 
 function main(sp) {
+
     config.showHistory === true ? null : clear();
-    if (sp === "/") {
-        currentPath = sp;
-    } else {
-        currentPath = currentPath + sp;
-    };
 
     // Clear array on restarting the main function.
     itemsArr = [];
@@ -109,8 +103,6 @@ function main(sp) {
     function navigation() {
         space();
         prompt.question('Enter a number or command: ', (answer) => {
-
-            currentPath = currentPath + "/" + itemsArr[answer];
 
             // No entry response.
             if (answer === "") {
@@ -201,15 +193,19 @@ function main(sp) {
 
             } else if (answer.trim() === "back" || answer.trim() === "..") {
                 let backPath = [];
-                console.log(sp);
                 let stageBackPath = sp.split("/");
-                console.log(stageBackPath);
-                console.log(stageBackPath.length);
+
                 for (let i = 0; i < stageBackPath.length - 1; i++) {
-                    backPath.push("/" + stageBackPath[i]);
+                    if (stageBackPath[i] !== "") {
+                        backPath.push("/" + stageBackPath[i]);
+                    };
                 };
-                
-                main(backPath.join(""));
+
+                if (stageBackPath.length === 2) {
+                    main("/");
+                } else {
+                    main(backPath.join(""));
+                };
 
             } else if (answer.trim() < itemsArr.length) {
 
