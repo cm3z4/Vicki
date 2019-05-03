@@ -1,6 +1,6 @@
 {
   "name": "vicki",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Using Node.js to navigate a Unix-like/Linux system.",
   "main": "vicki.js",
   "dependencies": {

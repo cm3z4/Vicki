@@ -1,12 +1,13 @@
-//                                         
-//   _____ _     _             ___     ___ 
-//  |  |  |_|___| |_ _ _      |_  |   |   |
-//  |  |  | |  _| '_| | |      _| |_ _| | |
-//   \___/|_|___|_,_|_  |_____|_____|_|___|
-//                  |___|_____|
+
+// ██╗   ██╗██╗ ██████╗██╗  ██╗██╗        ██╗    ██████╗    ██╗
+// ██║   ██║██║██╔════╝██║ ██╔╝██║       ███║   ██╔═████╗  ███║
+// ██║   ██║██║██║     █████╔╝ ██║       ╚██║   ██║██╔██║  ╚██║
+// ╚██╗ ██╔╝██║██║     ██╔═██╗ ██║        ██║   ████╔╝██║   ██║
+//  ╚████╔╝ ██║╚██████╗██║  ██╗██║███████╗██║██╗╚██████╔╝██╗██║
+//   ╚═══╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═╝ ╚═════╝ ╚═╝╚═╝
 //
 // Author: Christopher Meza (cm3z4).
-// Version: 1.0
+// Version: 1.0.1
 // ----------------------------------------
 
 // Import the configuration file.
@@ -37,7 +38,7 @@ function main(sp) {
 
     config.showHistory === true ? null : clear();
 
-    // Clear array on restarting the main function.
+    // Clear itemsArr on restarting the main function.
     itemsArr = [];
     space();
     if (sp === "/") {
@@ -46,8 +47,7 @@ function main(sp) {
         console.log(colors.bold.inverse("Current: " + sp + "/"));
     };
 
-
-    // Print to screen all items in the current directory accordingly.
+    // Print to the screen all the items in the current directory.
     function listItems() {
         space();
         if (itemsArr.length === 0) {
@@ -132,9 +132,9 @@ function main(sp) {
                 main(startPath);
             } else if (answer.trim() === "remove" || answer.trim() === "delete") {
                 space();
-                prompt.question('Enter the file/folder number to delete: ', (file) => {
+                prompt.question('Enter the directory/file number to delete: ', (file) => {
                     space();
-                    // Confirmation prompt to delete a file/folder.
+                    // Confirmation prompt to delete a directory/file.
                     prompt.question(colors.bold.inverse(`Are you sure you want to delete ${itemsArr[file]}? y/n:`) + " ", (confirm) => {
                         if (confirm.trim() === "y" || confirm.trim() === "Y" || confirm.trim() === "yes" || confirm.trim() === "Yes") {
                             if (fs.lstatSync(sp + "/" + itemsArr[file.trim()]).isDirectory()) {
@@ -175,23 +175,23 @@ function main(sp) {
                         };
                     });
                 });
-
+                // Create a new directory.
             } else if (answer.trim() === "new dir") {
                 space();
-                prompt.question('Folder name: ', (name) => {
-                    const folderName = sp + "/" + name.trim();
+                prompt.question('Directory name: ', (dirName) => {
+                    const directoryName = sp + "/" + dirName.trim();
                     try {
-                        if (!fs.existsSync(folderName)) {
-                            fs.mkdirSync(folderName);
+                        if (!fs.existsSync(directoryName)) {
+                            fs.mkdirSync(directoryName);
                             space();
-                            console.log(colors.bold.inverse(name.trim() + " was created!"));
+                            console.log(colors.bold.inverse(dirName.trim() + " was created!"));
                             space();
                             prompt.question('Press enter to continue: ', (key) => {
                                 main(sp);
                             });
                         } else {
                             space();
-                            console.log(colors.bold.inverse(name.trim() + " folder already exists!"));
+                            console.log(colors.bold.inverse("The " + dirName.trim() + " directory already exists!"));
                             space();
                             prompt.question('Press enter to continue: ', (key) => {
                                 main(sp);
@@ -201,21 +201,35 @@ function main(sp) {
                         console.error(err)
                     };
                 });
-
+                // Create a new file.
             } else if (answer.trim() === "new file") {
                 space();
-                prompt.question('File name: ', (name) => {
-                    space();
-                    prompt.question('Content: ', (content) => {
-                        fs.writeFile(sp + "/" + name.trim(), content.trim(), 'utf8', cb => {
+                prompt.question('File name: ', (fileName) => {
+                    const newFileName = sp + "/" + fileName.trim();
+                    try {
+                        if (!fs.existsSync(newFileName)) {
                             space();
-                            console.log(colors.bold.inverse(name.trim() + " was created!"));
+                            prompt.question('Content: ', (fileContent) => {
+                                fs.writeFile(sp + "/" + fileName.trim(), fileContent.trim(), 'utf8', cb => {
+                                    space();
+                                    console.log(colors.bold.inverse(fileName.trim() + " was created!"));
+                                    space();
+                                    prompt.question('Press enter to continue: ', (key) => {
+                                        main(sp);
+                                    });
+                                });
+                            });
+                        } else {
+                            space();
+                            console.log(colors.bold.inverse("The " + fileName.trim() + " file already exists!"));
                             space();
                             prompt.question('Press enter to continue: ', (key) => {
                                 main(sp);
                             });
-                        });
-                    });
+                        };
+                    } catch (err) {
+                        console.error(err)
+                    };
                 });
 
             } else if (answer.trim() === "back" || answer.trim() === "..") {

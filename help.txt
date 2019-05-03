@@ -3,15 +3,16 @@
 ██║   ██║██║██╔════╝██║ ██╔╝██║
 ██║   ██║██║██║     █████╔╝ ██║
 ╚██╗ ██╔╝██║██║     ██╔═██╗ ██║
- ╚████╔╝ ██║╚██████╗██║  ██╗██║ v_1.0
+ ╚████╔╝ ██║╚██████╗██║  ██╗██║ v_1.0.1
   ╚═══╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝
 
   COMMANDS
 
-        back - Navigates to the previous directory.
-        exit - Exits the program (Vicki).
-        help - Displays this text file for reference.
-        home - Navigates the console back to the starting path.
-     new dir - Creates a new directory/folder.
-    new file - Creates a new file.
-      remove - Removes a file/folder.
+        back - Navigate to the previous directory.
+        exit - Exit the application.
+        help - Display this text file for reference.
+        home - Navigate back to the home directory.
+               Configure the starting directory in the config.js file.
+     new dir - Create a new directory.
+    new file - Create a new file.
+      remove - Remove a directory/file.
