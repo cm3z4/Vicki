@@ -141,6 +141,7 @@ function main(sp) {
                                 rimraf(sp + "/" + itemsArr[file.trim()], (err) => {
                                     if (err) throw err;
                                 });
+                                space();
                                 console.log(colors.bold.inverse(`${itemsArr[file.trim()]} was deleted!`));
                                 space();
                                 prompt.question('Press enter to continue: ', (enter) => {
@@ -175,7 +176,33 @@ function main(sp) {
                     });
                 });
 
-            } else if (answer.trim() === "new") {
+            } else if (answer.trim() === "new dir") {
+                space();
+                prompt.question('Folder name: ', (name) => {
+                    const folderName = sp + "/" + name.trim();
+                    try {
+                        if (!fs.existsSync(folderName)) {
+                            fs.mkdirSync(folderName);
+                            space();
+                            console.log(colors.bold.inverse(name.trim() + " was created!"));
+                            space();
+                            prompt.question('Press enter to continue: ', (key) => {
+                                main(sp);
+                            });
+                        } else {
+                            space();
+                            console.log(colors.bold.inverse(name.trim() + " folder already exists!"));
+                            space();
+                            prompt.question('Press enter to continue: ', (key) => {
+                                main(sp);
+                            });
+                        };
+                    } catch (err) {
+                        console.error(err)
+                    };
+                });
+
+            } else if (answer.trim() === "new file") {
                 space();
                 prompt.question('File name: ', (name) => {
                     space();
