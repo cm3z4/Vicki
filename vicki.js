@@ -1,13 +1,13 @@
-
-// ██╗   ██╗██╗ ██████╗██╗  ██╗██╗        ██╗    ██████╗    ██╗
-// ██║   ██║██║██╔════╝██║ ██╔╝██║       ███║   ██╔═████╗  ███║
-// ██║   ██║██║██║     █████╔╝ ██║       ╚██║   ██║██╔██║  ╚██║
-// ╚██╗ ██╔╝██║██║     ██╔═██╗ ██║        ██║   ████╔╝██║   ██║
-//  ╚████╔╝ ██║╚██████╗██║  ██╗██║███████╗██║██╗╚██████╔╝██╗██║
-//   ╚═══╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═╝ ╚═════╝ ╚═╝╚═╝
+//
+// ██╗   ██╗██╗ ██████╗██╗  ██╗██╗        ██╗   ██╗   ██╗
+// ██║   ██║██║██╔════╝██║ ██╔╝██║       ███║  ███║  ███║
+// ██║   ██║██║██║     █████╔╝ ██║       ╚██║  ╚██║  ╚██║
+// ╚██╗ ██╔╝██║██║     ██╔═██╗ ██║        ██║   ██║   ██║
+//  ╚████╔╝ ██║╚██████╗██║  ██╗██║███████╗██║██╗██║██╗██║
+//   ╚═══╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═╝╚═╝╚═╝╚═╝
 //
 // Author: Christopher Meza (cm3z4).
-// Version: 1.0.1
+// Version: 1.1.1
 // ----------------------------------------
 
 // Import the configuration file.
@@ -229,6 +229,40 @@ function main(sp) {
                         };
                     } catch (err) {
                         console.error(err)
+                    };
+                });
+
+            } else if (answer.trim() === "copy file") {
+                space();
+                prompt.question('Choose a file to copy: ', (fileToCopy) => {
+
+                    const parseFileToCopy = parseInt(fileToCopy, 10);
+
+                    if (parseFileToCopy < 0 || parseFileToCopy >= itemsArr.length || isNaN(fileToCopy) || fileToCopy === "") {
+                        space();
+                        console.log(colors.bold.inverse("Not a valid number! Try again."));
+                        setTimeout(function () {
+                            main(sp);
+                        }, 1500);
+                    } else {
+
+                        const existingFile = sp + "/" + itemsArr[fileToCopy.trim()];
+
+                        if (!fs.lstatSync(existingFile).isDirectory() || fs.lstatSync(existingFile).isSymbolicLink()) {
+                            space();
+                            prompt.question('New copy name: ', (newCopyName) => {
+                                const newCopy = sp + "/" + newCopyName.trim();
+                                fs.copyFile(existingFile, newCopy, (err) => {
+                                    if (err) throw err;
+                                    space();
+                                    console.log(colors.bold.inverse(newCopyName + " was created!"));
+                                    space();
+                                    prompt.question('Press enter to continue: ', (key) => {
+                                        main(sp);
+                                    });
+                                });
+                            });
+                        };
                     };
                 });
 

@@ -1,5 +1,7 @@
 # Vicki
 
+Version: 1.1.1
+
 ### Description
 
 Vicki is a Node.js application built to easily navigate a Unix-like/Linux system with a command-line interface (CLI). This allows a complete beginner to use a terminal to read/write and remove files/directories without learning any basic shell commands. Changing directories is as simple as entering a number.
@@ -11,6 +13,7 @@ Vicki is a Node.js application built to easily navigate a Unix-like/Linux system
 - Directory indexing for easy navigation.
 - Read UTF-8 files.
 - Create text files.
+- Copy text files.
 - Delete files and directories.
 - View images (png & jpg) in the terminal.
 - Show hidden files.
@@ -18,7 +21,6 @@ Vicki is a Node.js application built to easily navigate a Unix-like/Linux system
 
 ### Developing Features
 - Play audio/video files.
-- Copy files/directories.
 - Compress files/directories.
 - Extract files/directories.
 - History logging.
@@ -34,10 +36,10 @@ I created a bash/zsh alias to globally execute vicki.js from anywhere on my syst
 
 ### Screenshots
 
-![](./assets/img/screenshot1.png)
+![](./assets/img/help_screenshot.png)
 
-![](./assets/img/screenshot.png)
+![](./assets/img/indexing_screenshot.png)
 
-![](./assets/img/screenshot2.png)
+![](./assets/img/pic_screenshot.png)
 
 ![](./assets/img/create_delete.gif)

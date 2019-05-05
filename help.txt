@@ -3,12 +3,13 @@
 ██║   ██║██║██╔════╝██║ ██╔╝██║
 ██║   ██║██║██║     █████╔╝ ██║
 ╚██╗ ██╔╝██║██║     ██╔═██╗ ██║
- ╚████╔╝ ██║╚██████╗██║  ██╗██║ v_1.0.1
+ ╚████╔╝ ██║╚██████╗██║  ██╗██║ v_1.1.1
   ╚═══╝  ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝
 
   COMMANDS
 
         back - Navigate to the previous directory.
+   copy file - Copy a file.
         exit - Exit the application.
         help - Display this text file for reference.
         home - Navigate back to the home directory.
