@@ -251,16 +251,27 @@ function main(sp) {
                         if (!fs.lstatSync(existingFile).isDirectory() || fs.lstatSync(existingFile).isSymbolicLink()) {
                             space();
                             prompt.question('New copy name: ', (newCopyName) => {
-                                const newCopy = sp + "/" + newCopyName.trim();
-                                fs.copyFile(existingFile, newCopy, (err) => {
-                                    if (err) throw err;
+
+                                const doesFileNameAlreadyExist = sp + "/" + newCopyName.trim();
+
+                                if (fs.existsSync(doesFileNameAlreadyExist)) {
                                     space();
-                                    console.log(colors.bold.inverse(newCopyName + " was created!"));
-                                    space();
-                                    prompt.question('Press enter to continue: ', (key) => {
+                                    console.log(colors.bold.inverse("That file name already exists! Try again."));
+                                    setTimeout(function () {
                                         main(sp);
+                                    }, 1500);
+                                } else {
+                                    const newCopy = sp + "/" + newCopyName.trim();
+                                    fs.copyFile(existingFile, newCopy, (err) => {
+                                        if (err) throw err;
+                                        space();
+                                        console.log(colors.bold.inverse(newCopyName + " was created!"));
+                                        space();
+                                        prompt.question('Press enter to continue: ', (key) => {
+                                            main(sp);
+                                        });
                                     });
-                                });
+                                };
                             });
                         };
                     };
